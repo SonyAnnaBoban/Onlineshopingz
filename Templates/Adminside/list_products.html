@@ -1,0 +1,99 @@
+{% comment %} <nav>
+    <ul class="pagination justify-content-center">
+        {% if products.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in products.paginator.page_range %}
+        <li class="page-item {% if products.number == num %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endfor %}
+
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ products.next_page_number }}">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+
+<div class="container my-4">
+    <h2 class="mb-4">Product List</h2>
+
+    <form method="POST" class="row g-3 mb-4">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="search" placeholder="Search products..." aria-label="Search" />
+        </div>
+        <div class="col-md-4">
+            <select name="category_id" class="form-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.description }}</p>
+                <span class="badge bg-secondary">{{ product.category.name }}</span> <!-- Display category -->
+            </div>
+            <span class="fw-bold">${{ product.price }}</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No products found.</li>
+        {% endfor %}
+    </ul>
+</div> {% endcomment %}
+{% comment %} 
+{% load static %}
+<div class="container my-4">
+    <h2 class="mb-4">Product List</h2>
+
+    <form method="POST" class="row g-3 mb-4">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="search" value="{{ search_query }}" placeholder="Search products..." aria-label="Search" />
+        </div>
+        <div class="col-md-4">
+            <select name="category_id" class="form-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    <ul class="list-group">
+        {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <h5>{{ product.name }}</h5>
+                <p>{{ product.description }}</p>
+                <span class="badge bg-secondary">{{ product.category.name }}</span> <!-- Display category -->
+            </div>
+            <span class="fw-bold">${{ product.price }}</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No products found.</li>
+        {% endfor %}
+    </ul>
+</div> {% endcomment %}
