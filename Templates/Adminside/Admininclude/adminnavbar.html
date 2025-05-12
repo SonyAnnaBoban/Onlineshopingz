@@ -1,12 +1,12 @@
 {% load static %}
 <aside class="navbar-aside" id="offcanvas_aside">
-    <div class="aside-top">
+    {% comment %} <div class="aside-top">
         <a href="index.html" class="brand-wrap">
-            <img src="assets/imgs/theme/logo.svg" class="logo" alt="PlanterDream Dashboard">
+            <img src="{% static 'adminassets/imgs/theme/logo.svg' %}" class="logo" alt="PlanterDream Dashboard">
         </a>
         <div>
             <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
-        </div>
+        </div> {% endcomment %}
     </div>
     <nav>
         <ul class="menu-aside">
@@ -16,26 +16,52 @@
                     <i class="icon material-icons md-home"></i>
                     <span class="text">Dashboard</span>
                 </a> 
-                
+              
             </li>
-            {% comment %} <li class="menu-item has-submenu"> {% endcomment %}
-            <li>
-                <a class="menu-link" href="{% url 'Adminapp:add_category' %}"> <i class="icon material-icons md-add_box"></i>
-                    <span class="text">Add  Category</span>
-                </a>
-            </li>
-            <li>
-                <a class="menu-link" href="{% url 'Adminapp:add_product' %}"> <i class="icon material-icons md-add_box"></i>
-                    <span class="text">Add product</span>
-                </a>
             
+            <li class="menu-item has-submenu">
+                <a class="menu-link" href="#"> 
+                    <span class="text">Categories</span>
+                </a>
+                <div class="submenu">
+                    <a  href="{% url 'Adminapp:add_category' %}">Add Categories
+                        <i class="icon material-icons md-add_box"></i>
+                    </a>   
+                   
+                    <a  href="{% url 'Adminapp:list_categories' %}">
+                        <span class="text">list  Category</span>
+                    </a>
+                </div>
             </li>
-            <li>
-                <a class="menu-link" href="page-orders-1.html"> <i class="icon material-icons md-shopping_cart"></i>
+            <li class="menu-item has-submenu">
+                <a class="menu-link" href="#"> 
+                    <span class="text">Products</span>
+                </a>
+                <div class="submenu">
+                    <a  href="{% url 'Adminapp:add_product' %}">Add Products
+                        <i class="icon material-icons md-add_box"></i>
+                    </a>   
+                   
+                    <a  href="{% url 'Adminapp:list_products' %}">
+                        <span class="text">list  Products</span>
+                    </a>
+                </div>
+            </li>
+
+            <li class="menu-item has-submenu">
+                <a class="menu-link" href="#"> 
                     <span class="text">Orders</span>
                 </a>
-               
+                <div class="submenu">
+                    <a  href="{% url 'Adminapp:orderlist' %}">OrderList
+                        
+                    </a>   
+                   
+                    
+                </div>
             </li>
+           
+            
             <li class="menu-item has-submenu">
                 <a class="menu-link" href="page-sellers-cards.html"> <i class="icon material-icons md-store"></i>
                     <span class="text">Sellers</span>
@@ -57,8 +83,10 @@
                     <span class="text">Account</span>
                 </a>
                 <div class="submenu">
-                    <a href="page-account-login.html">User login</a>
-                    <a href="page-account-register.html">User registration</a>
+                    <a href="{% url 'Adminapp:list_users' %}">User List</a>
+                    <a href="{% url 'Accountsapp:user_login' %}" >User Login</a>
+                    <a href="{% url 'Accountsapp:Register' %}" > User Register</a>
+                    
                     <a href="page-error-404.html">Error 404</a>
                 </div>
             </li>

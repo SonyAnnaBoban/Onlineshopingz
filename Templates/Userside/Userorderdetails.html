@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Order #{{ order.id }} Details</h2>
+
+    <div class="card p-4 mb-4 shadow-sm">
+        <h5>Order Summary</h5>
+        <p><strong>Date:</strong> {{ order.order_date|date:"d M Y, H:i" }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Total Amount:</strong> ₹{{ order.total_price }}</p>
+    </div>
+
+    <div class="card p-4 mb-4 shadow-sm">
+        <h5>Shipping Address</h5>
+        {% if order_address %}
+            <p><strong>Name:</strong> {{ order_address.name }}</p>
+            <p>{{ order_address.address_line1 }}, {{ order_address.city }}, {{ order_address.state }} - {{ order_address.zip_code }}</p>
+        {% else %}
+            <p class="text-muted">No address available for this order.</p>
+        {% endif %}
+    </div>
+
+    <div class="card p-4 shadow-sm">
+        <h5>Items in this Order</h5>
+        {% if order_items %}
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                <tr>
+                    <td>{{ item.product.product_name }}</td>
+                    <td>₹{{ item.price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>₹{{ item.total_price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted">No items found in this order.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

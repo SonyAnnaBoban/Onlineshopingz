@@ -16,6 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SESSION_COOKIE_AGE = 3600  # Session lasts for 1 hour (default is 300 seconds)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -42,6 +43,11 @@ INSTALLED_APPS = [
     'Adminapp',
     'Productapp',
     'Categoryapp',
+    'storeapp',
+    'userprofileapp',
+    'cartapp',
+    'orderapp',
+
 ]
 
 MIDDLEWARE = [
@@ -84,7 +90,7 @@ AUTH_USER_MODEL = 'Accountsapp.MyUser'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'online',
+        'NAME': 'dreamer',
         'USER': 'postgres',
         'PASSWORD':'anishcha',
         'HOST': 'localhost',
@@ -121,6 +127,13 @@ USE_I18N = True
 
 USE_TZ = True
 
+# AUTHENTICATION_BACKENDS = [
+#     'Accountsapp.backends.EmailBackend',  # Make sure this points to your custom backend
+#     'django.contrib.auth.backends.ModelBackend',
+# ]
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -133,17 +146,19 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'izzatezza1922@gmail.com'
 EMAIL_HOST_PASSWORD = 'kveb mawl bhwd vxdu'
 
-STATIC_URL = 'static/'
+LOGIN_URL = 'Accountsapp:user_login'  
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
 
 #media file configuration
-MEDIA_URL ='/media/'
-MEDIA_ROOT = BASE_DIR /'media'
-
-MEDIA_URL ='/media/'
 
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

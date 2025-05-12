@@ -1,0 +1,133 @@
+{% block content %}
+<style>
+    /* Center the container and add shadow */
+    .user-list-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 40px;
+    }
+
+    .user-list-table {
+        width: 80%;
+        max-width: 900px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Table header styling */
+    .user-list-table thead {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .user-list-table th, .user-list-table td {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .user-list-table th {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    /* Table row styling with hover effect */
+    .user-list-table tbody tr {
+        background-color: #f9f9f9;
+        transition: background-color 0.2s;
+    }
+
+    .user-list-table tbody tr:nth-child(even) {
+        background-color: #f1f1f1;
+    }
+
+    .user-list-table tbody tr:hover {
+        background-color: #e2e6ea;
+    }
+
+    /* Badge styling */
+    .badge-success {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    /* Button styling for Block/Unblock */
+    .btn-sm {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    /* Center the "Back to Dashboard" button */
+    .back-dashboard {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="user-list-container">
+    <div class="user-list-table">
+        <h2 class="text-center mt-3 mb-4">User List</h2>
+
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Email</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.first_name|default:"N/A" }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.last_login|date:"d M Y, H:i" }}</td>
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_blocked %}
+                                    <a href="{% url 'Adminapp:block_unblock_user' user.id %}" class="btn btn-warning btn-sm">Unblock</a>
+                                {% else %}
+                                    <a href="{% url 'Adminapp:block_unblock_user' user.id %}" class="btn btn-danger btn-sm">Block</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">No users found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Back to Admin Dashboard button -->
+<div class="back-dashboard">
+    <a href="{% url 'Adminapp:admin_dashboard' %}" class="btn btn-secondary">Back to Admin Dashboard</a>
+</div>
+{% endblock %}

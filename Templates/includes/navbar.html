@@ -1,85 +1,89 @@
-{% load static %}       
-        <header class="section-header">
-            <nav class="navbar p-md-0 navbar-expand-sm navbar-light border-bottom">
-            <div class="container">
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop4" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+{% load static %}
+<header class="section-header">
+    <nav class="navbar navbar-expand-lg navbar-light border-bottom py-2">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'Accountsapp:home' %}">
+                <h2>PLANTER'S DREAM</h2>
+            </a>
+
+            <!-- Toggle Button for Smaller Screens -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarTop4">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item dropdown">
-                         <a href="#" class="nav-link">   English </a>
-                        
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link"> USD </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav">
-                    <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> Email </a></li>
-                    <li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Call us </a></li>
-                </ul> <!-- list-inline //  -->
-              </div> <!-- navbar-collapse .// -->
-            </div> <!-- container //  -->
-            </nav>
-            
-            <section class="header-main border-bottom">
-                <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-2 col-md-3 col-6">
-                    <a href="./" class="brand-wrap">
-                        <h2>PLANTER'S<br> DREAM</h2>
-                        <!-- <img class="logo" src="{% static './images/logo.png' %}"> -->
-                    </a> <!-- brand-wrap.// -->
-                </div>
-                <div class="col-lg col-sm col-md col-6 flex-grow-0">
-                    <div class="category-wrap dropdown d-inline-block float-right">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"> 
-                            <i class="fa fa-bars"></i> All category 
-                        </button>
-                        <div class="dropdown-menu">
-                            {% for category in links %}
-                                <a class="dropdown-item" href="#"> {{ category.category_name }}</a>
-                            {% endfor %}
-                             
-                        </div>
-                    </div>  <!-- category-wrap.// -->
-                </div> <!-- col.// -->
-                <a href="./store.html" class="btn btn-outline-primary">Store</a>
-                <div class="col-lg  col-md-6 col-sm-12 col">
-                    <form action="#" class="search">
-                        <div class="input-group w-100">
-                            <input type="text" class="form-control" style="width:60%;" placeholder="Search">
-                            
-                            <div class="input-group-append">
-                              <button class="btn btn-primary" type="submit">
-                                <i class="fa fa-search"></i>
-                              </button>
-                            </div>
-                        </div>
-                    </form> <!-- search-wrap .end// -->
-                </div> <!-- col.// -->
-                <div class="col-lg-3 col-sm-6 col-8 order-2 order-lg-3">
-                            <div class="d-flex justify-content-end mb-3 mb-lg-0">
-                                <div class="widget-header">
-                                    <small class="title text-muted">Welcome guest!</small>
-                                    <div> 
-                                <a href="{% url 'Accountsapp:user_login' %}" class="btn btn-outline-primary">Login</a>
-                                <a href="{% url 'Accountsapp:Register' %}" class="btn btn-primary ml-2">Register</a>
-                                    </div>
-                                </div>
-                                <a href="./cart.html" class="widget-header pl-3 ml-3">
-                                    <div class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></div>
-                                    <span class="badge badge-pill badge-danger notify">0</span>
+            </button>
+
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <!-- Categories Dropdown -->
+                <div class="dropdown me-3">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="categoriesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bars"></i> Categories
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="categoriesDropdown">
+                        {% for category in categories %}
+                            <li>
+                                <a class="dropdown-item" href="{% url 'Accountsapp:home' %}?category={{ category.slug }}">
+                                    {{ category.name }}
                                 </a>
-                            </div> <!-- widgets-wrap.// -->
-                        </div> <!-- col.// -->
-            </div> <!-- row.// -->
-                </div> <!-- container.// -->
-            </section> <!-- header-main .// -->
-            
-            
-            
-            
-            </header> <!-- section-header.// -->
-     
+                            </li>
+                        {% empty %}
+                            <li><span class="dropdown-item text-muted">No categories available</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Search Bar -->
+                <form action="{% url 'storeapp:product_search' %}" method="GET" class="search me-3 d-flex">
+                    <input type="text" name="query" class="form-control" style="max-width: 300px;" placeholder="Search for products..." value="{{ request.GET.query|default:'' }}">
+                    <button class="btn btn-primary ms-1" type="submit">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
+
+                <!-- Right-side Items -->
+                <div class="d-flex align-items-center">
+                    <!-- Home Button -->
+                    <a href="{% url 'Accountsapp:home' %}" class="btn btn-primary me-3">Home</a>
+
+                    <!-- User Profile/Login/Register -->
+                    <div class="dropdown me-3">
+                        {% if user.is_authenticated %}
+                            <a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" id="userMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-user-circle"></i> {{ user.first_name }}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userMenuLink">
+                                <li><a class="dropdown-item" href="{% url 'userprofileapp:user_profile' %}">My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'userprofileapp:edit_profile' %}">Edit Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'userprofileapp:change_password' %}">Change Password</a></li>
+                             
+
+                                <li><a class="dropdown-item" href="{% url 'orderapp:order_history' %}"> MY Order</a></li>
+                                   
+                                
+
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'Accountsapp:userlogout' %}">Logout</a></li>
+                            </ul>
+                        {% else %}
+                            <a href="{% url 'Accountsapp:user_login' %}" class="btn btn-outline-primary me-1">Login</a>
+                            <a href="{% url 'Accountsapp:Register' %}" class="btn btn-outline-primary">Register</a>
+                        {% endif %}
+                    </div>
+
+                    <!-- Cart -->
+                    {% if user.is_authenticated %}
+    <a href="{% url 'cartapp:view_cart' %}" class="btn btn-outline-secondary position-relative">
+{% else %}
+    <a href="{% url 'Accountsapp:user_login' %}" class="btn btn-outline-secondary position-relative">
+{% endif %}
+        <i class="fa fa-shopping-cart"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ total_product|default:0 }}
+        </span>
+    </a>
+
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+

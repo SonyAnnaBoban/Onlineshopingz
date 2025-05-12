@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">Shopping Cart</h2>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <!-- Product Name -->
+                    <td class="fw-bold">{{ item.product.product_name }}</td>
+
+                    <!-- Product Image -->
+                    <td>
+                        {% if item.product.images.exists %}
+                        <img src="{{ item.product.images.first.image.url }}" 
+                             alt="{{ item.product.product_name }}" 
+                             class="img-thumbnail rounded" 
+                             style="max-width: 75px; max-height: 75px;">
+                        {% else %}
+                        <img src="{% static 'placeholder.jpg' %}" 
+                             alt="No Image Available" 
+                             class="img-thumbnail rounded" 
+                             style="max-width: 75px; max-height: 75px;">
+                        {% endif %}
+                    </td>
+
+                    <!-- Product Price -->
+                    <td>₹{{ item.product.price }}</td>
+                  
+                    <!-- Quantity Adjustment -->
+                    <td>
+                        <form class="d-flex justify-content-center align-items-center">
+                            {% csrf_token %}
+                            <input type="number" name="quantity" value="{{ item.quantity }}" class="form-control text-center" style="max-width: 60px;" min="1" onchange="update_cart_item({{ item.product.id }}, this.value)">
+                            {% comment %} <button type="submit" class="btn btn-primary btn-sm ms-2">Update</button> {% endcomment %}
+                        </form>
+                        
+                    </td>
+
+                    <!-- Total Price -->
+                    <td id="item-total-{{ item.product.id }}">₹{{ item.total_price }}</td>
+                    {% comment %} <td>₹{{ item.total_price }}</td> {% endcomment %}
+                    
+
+                    <!-- Remove Button -->
+                    <td>
+                        <form action="{% url 'cartapp:remove_from_cart' item.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">Your cart is empty.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if total_price > 0 %}
+    <div class="text-end mt-4">
+        {% comment %} <h4 class="text-success">Total: ₹{{ total_price }}</h4> {% endcomment %}
+        <h4 class="text-success">Total: <span id="cart-total">₹{{ total_price }}</span></h4>
+        <a href="{% url 'cartapp:checkout' %}" class="btn btn-success btn-lg">Proceed to Checkout</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+   function  update_cart_item(id,quantity) 
+  
+   {
+    console.log(id,quantity) 
+    fetch(`/cart/update_cart/${id}/${quantity}/`, {
+        method: "GET",  
+    }).then(response => response.json())
+      .then(data => {
+          console.log(data);
+          if (data.success) {
+            // Update the total price of the item
+            document.getElementById(`item-total-${id}`).innerText = `₹${data.item_total}`;
+            // Update the total cart price
+            document.getElementById("cart-total").innerText = `₹${data.cart_total}`;
+        } else {
+            alert(data.message || "Something went wrong.");
+        }
+          
+      });
+
+  
+    }
+</script>
+
+
+
+
+{% endblock %}

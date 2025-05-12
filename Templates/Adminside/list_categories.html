@@ -1,47 +1,167 @@
-{% comment %} <!-- Assuming Bootstrap CSS is included in the base template -->
-<div class="container my-4">
-    <h2 class="mb-4">Category List</h2>
-    
-    <form method="POST" class="d-flex mb-3">
-        {% csrf_token %}
-        <input type="text" class="form-control me-2" name="search" placeholder="Search categories..." aria-label="Search" />
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+{% extends 'Adminside/adminbase.html' %}
+{% load static %}
+{% block content %}
 
-    <ul class="list-group">
-        {% for category in categories %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <h5>{{ category.name }}</h5>
-                <p>{{ category.description }}</p>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+
+    .table-container {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color:rgb(56, 158, 213);
+        color: white;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #eaf2fd;
+    }
+
+    td {
+        color: #333;
+    }
+
+    .btn {
+        padding: 6px 12px;
+        font-size: 0.9em;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .add-category {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .alert-info {
+        width: 80%;
+        margin: 10px auto;
+        padding: 10px;
+        border: 1px solid #bee5eb;
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-radius: 4px;
+    }
+</style>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Category List</h1>
+
+        <!-- Display success or error messages -->
+        {% comment %} {% if messages %}
+            <div class="alert alert-info">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
             </div>
-        </li>
-        {% empty %}
-        <li class="list-group-item">No categories found.</li>
-        {% endfor %}
-    </ul>
-</div> {% endcomment %}
+        {% endif %} {% endcomment %}
 
-{% comment %} {% load static %}
-<div class="container my-4">
-    <h2 class="mb-4">Category List</h2>
-    
-    <form method="POST" class="d-flex mb-3">
-        {% csrf_token %}
-        <input type="text" class="form-control me-2" name="search" value="{{ search_query }}" placeholder="Search categories..." aria-label="Search" />
-        <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+        <!-- Table to list categories -->
+        <div class="table-container">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark bg-primary">
+                    <tr>
+                        <th>#</th>
+                        <th>Category Name</th>
+                        <th>Slug</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ category.name }}</td>
+                            <td>{{ category.slug }}</td>
+                            <td>{{ category.description }}</td>
+                            <td>
+                                <!-- Edit and delete buttons -->
+                                <a href="{% url 'Adminapp:edit_category' category.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{% url 'Adminapp:soft_delete_category' category.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">Delete</a>
+                            </td> 
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No categories found.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-    <ul class="list-group">
-        {% for category in categories %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <h5>{{ category.name }}</h5>
-                <p>{{ category.description }}</p>
-            </div>
-        </li>
-        {% empty %}
-        <li class="list-group-item">No categories found.</li>
-        {% endfor %}
-    </ul>
-</div> {% endcomment %}
+        <!-- Add Category and Back buttons -->
+        <div class="add-category">
+            <a href="{% url 'Adminapp:add_category' %}" class="btn btn-success">Add Category</a>
+           
+        </div>
+    </div>
+
+    <!-- Optional Bootstrap JS for handling the layout -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+
+{% endblock %}

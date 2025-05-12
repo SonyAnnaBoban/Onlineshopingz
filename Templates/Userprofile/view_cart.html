@@ -1,0 +1,86 @@
+{% comment %} {% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Your Shopping Cart</h2>
+    
+    {% if cart_items %}
+    <ul class="list-group mb-4 shadow-sm">
+        {% for item in cart_items %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <strong>{{ item.product.product_name }}</strong><br>
+                {{ item.quantity }} x ${{ item.product.price }}
+            </div>
+            <div>
+                <span class="badge bg-primary p-2">${{ item.total_price }}</span>
+                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger ms-3">Remove</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="mb-4">
+        <h4 class="text-end">Total: <span class="text-success">${{ total_price }}</span></h4>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Back to Shopping</a>
+        <a href="{% url 'checkout' %}" class="btn btn-success">Proceed to Checkout</a>
+    </div>
+
+    {% else %}
+    <div class="alert alert-info">
+        Your cart is empty. <a href="{% url 'home' %}">Start shopping</a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+
+
+
+
+{% comment %} {% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <h2>Your Shopping Cart</h2>
+        {% if cart_items %}
+        <ul class="list-group mb-4">
+            {% for item in cart_items %}
+            <li class="list-group-item">
+                {{ item.product.product_name }} - {{ item.quantity }} x ${{ item.product.price }} 
+                <span class="badge bg-primary">${{ item.total_price }}</span>
+                <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-danger btn-sm float-end">Remove</a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div>
+            <h4>Total Price: ${{ total_price }}</h4>
+        </div>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">Back to Shopping</a>
+        <a href="{% url 'checkout' %}" class="btn btn-success mt-3">Proceed to Checkout</a>
+
+        {% else %}
+        <p>Your cart is empty. <a href="{% url 'home' %}">Start shopping</a></p>
+        {% endif %}
+    </div>
+</body>
+</html>
+{% endblock %} {% endcomment %} {% endcomment %}

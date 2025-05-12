@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          
+
+            <li class="breadcrumb-item"><a href="  {% url 'Accountsapp:home' %} ">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.product_name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% for image in product.images.all %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                        <img src="{{ image.image.url }}" class="d-block w-100 rounded" alt="{{ product.product_name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <h1>{{ product.product_name }}</h1>
+            <p class="text-muted">{{ product.description }}</p>
+            <h4 class="text-success">₹ {{ product.price }}</h4>
+
+            <!-- Stock Info -->
+            {% comment %} {% if product.stock > 0 %}
+                <p class="text-success"><strong>In Stock:</strong> {{ product.stock }} items</p>
+            {% else %}
+                <p class="text-danger"><strong>Out of Stock</strong></p>
+            {% endif %} {% endcomment %}
+
+            <!-- Rating -->
+            <p><strong>Rating:</strong> {{ product.average_rating }}/5</p>
+
+            <!-- Add to Cart / Wish Form -->
+            {% if product.stock > 0 %}
+            <form action="{% url 'cartapp:add_to_cart' product_id=product.id %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.stock }}" class="form-control w-25">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" name="action" value="cart" class="btn btn-success">Add to Cart</button>
+                    <button type="submit" name="action" value="wishlist" class="btn btn-outline-secondary">Add to Wish</button>
+                </div>
+            </form>
+            {% else %}
+                <p class="text-muted mt-3">You cannot purchase this item right now.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

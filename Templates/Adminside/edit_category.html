@@ -1,0 +1,120 @@
+{% load static %}
+{% block content %}
+
+<div class="min-vh-100 d-flex justify-content-center align-items-center bg-light">
+    <div class="card p-5 shadow-lg" style="max-width: 600px; width: 100%;">
+        <h2 class="text-center mb-4 fw-bold">Edit Category</h2>
+
+        <!-- Edit Category Form -->
+        <form method="POST" action="">
+            {% csrf_token %}
+            
+            <div class="form-group mb-4">
+                <label for="name" class="form-label"><strong>Category Name</strong></label>
+                <input type="text" name="name" id="name" class="form-control" value="{{ category.name }}" required>
+            </div>
+            
+            <div class="form-group mb-4">
+                <label for="description" class="form-label"><strong>Category Description</strong></label>
+                <textarea name="description" id="description" class="form-control" rows="4" required>{{ category.description }}</textarea>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm" style="border-radius: 8px;">
+                    Update
+                </button>
+                <a href="{% url 'Adminapp:list_categories' %}" class="btn btn-outline-secondary btn-lg ms-3" style="border-radius: 8px;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- Styling -->
+<style>
+    /* Same styles you already wrote */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9fafb;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    h2 {
+        color: #333;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 40px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        color: #444;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 16px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 6px rgba(128, 189, 255, 0.3);
+        outline: none;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 16px;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn-outline-secondary {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 16px;
+        color: #6c757d;
+        transition: color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+        color: #495057;
+        border-color: #adb5bd;
+    }
+
+    .text-center {
+        margin-top: 20px;
+    }
+</style>
+
+{% endblock %}

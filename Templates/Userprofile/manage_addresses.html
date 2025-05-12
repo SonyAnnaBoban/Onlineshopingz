@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Manage Addresses</h2>
+
+    <!-- Display Addresses -->
+    <ul class="list-group mb-4">
+        {% for address in addresses %}
+        <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <strong>{{ forloop.counter }}.</strong>
+                <span id="address_{{ address.id }}_name">{{ address.name }}</span>,
+                <span id="address_{{ address.id }}_line1">{{ address.address_line1 }}</span>,
+                <span id="address_{{ address.id }}_city">{{ address.city }}</span>,
+                <span id="address_{{ address.id }}_state">{{ address.state }}</span> -
+                <span id="address_{{ address.id }}_zip_code">{{ address.zip_code }}</span>
+                <span id="address_{{ address.id }}_phone_number">{{ address.phone_number }}</span>
+
+
+                {% if address.is_shipping_address %}
+                    <span class="badge bg-primary">Shipping</span>
+                {% endif %}
+            </div>
+            <div>
+                <button onclick="toggleForm({{ address.id }})" class="btn btn-warning btn-sm me-2">Edit</button>
+               
+                <form method="post" action="{% url 'userprofileapp:delete_address' address.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-center text-muted">No addresses added yet.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Add New Address Button -->
+    <button onclick="toggleForm()" class="btn btn-primary mb-4">Add New Address</button>
+
+    <!-- Address Form -->
+    <form id="addressForm" method="post" style="display: none;" class="card p-4">
+        {% csrf_token %}
+        <input type="hidden" name="address_id" id="addressId">
+         
+        <div class="mb-3">
+            
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" id="name" required>
+        </div>
+
+        <div class="mb-3">
+
+            <label for="address_line1" class="form-label">Address Line</label>
+            <input type="text" class="form-control" name="address_line1" id="address_line1" required>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" name="city" id="city" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" name="state" id="state" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="zip_code" class="form-label">ZIP Code</label>
+                <input type="text" class="form-control" name="zip_code" id="zip_code" required>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="zip_code" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" name="phone_number" id="phone_number" required>
+            </div>
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" name="is_shipping_address" id="is_shipping_address">
+            <label for="is_shipping_address" class="form-check-label">Is this your shipping address?</label>
+        </div>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="toggleForm()">Cancel</button>
+        </div>
+    </form>
+
+    <!-- Message Display for User Feedback -->
+    {% if messages %}
+    <div class="mt-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Back Button -->
+    <a href="{% url 'userprofileapp:user_profile' %}" class="btn btn-outline-secondary mt-4">Back to Profile</a>
+</div>
+
+<script>
+    function toggleForm(addressId = null) {
+        const form = document.getElementById('addressForm');
+        const addressIdInput = document.getElementById('addressId');
+
+        if (form.style.display === 'block' && addressIdInput.value == addressId) {
+            // Same ID clicked again - hide the form
+            form.style.display = 'none';
+            form.reset();
+            addressIdInput.value = '';
+            return;
+        }
+
+        form.style.display = 'block';
+
+        if (addressId === null) {
+            form.reset();
+            addressIdInput.value = '';
+        } else {
+            addressIdInput.value = addressId;
+            document.getElementById('name').value = document.getElementById(`address_${addressId}_name`).textContent.trim();
+            document.getElementById('address_line1').value = document.getElementById(`address_${addressId}_line1`).textContent.trim();
+            document.getElementById('city').value = document.getElementById(`address_${addressId}_city`).textContent.trim();
+            document.getElementById('state').value = document.getElementById(`address_${addressId}_state`).textContent.trim();
+            document.getElementById('zip_code').value = document.getElementById(`address_${addressId}_zip_code`).textContent.trim();
+            document.getElementById('phone_number').value = document.getElementById(`address_${addressId}_phone_number`).textContent.trim();
+
+        }
+    }
+</script>
+{% endblock %}
+
+
+

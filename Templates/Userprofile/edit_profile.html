@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title text-center">Edit User Profile</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">First Name:</label>
+                    <input type="text" class="form-control" name="first_name" value="{{ user.first_name }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name:</label>
+                    <input type="text" class="form-control" name="last_name" value="{{ user.last_name }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-control" name="email" value="{{ user.email }}">
+                </div>
+                
+
+               
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'userprofileapp:user_profile' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('same_as_user_address').addEventListener('change', function() {
+        const fields = document.getElementById('shipping-address-fields');
+        fields.style.display = this.checked ? 'none' : 'block';
+    });
+</script>
+
+{% endblock %}
+

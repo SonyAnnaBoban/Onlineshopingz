@@ -1,17 +1,18 @@
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.utils import timezone
 
 class MyUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
+        print("password:",password)
+         
+        print("email:",email)
         if not email:
             raise ValueError("The Email field must be set")
         
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-
-        # Ensure the password is hashed using set_password
-        user.set_password(password)  # This will hash the password
+        user.set_password(password)  # Hash the password
         user.save(using=self._db)
         return user
 
@@ -30,19 +31,17 @@ class MyUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 class MyUser(AbstractBaseUser):
-    
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)  # Required for admin access
-    is_superuser = models.BooleanField(default=False)  # Required for superuser access
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)  # Admin interface access
+    is_superuser = models.BooleanField(default=False)  # Full permissions
+    is_admin = models.BooleanField(default=False)  # Admin role
+    is_blocked = models.BooleanField(default=False)  # Blocking user
     
-    is_blocked = models.BooleanField(default=False)
-
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name','last_name']
 
     objects = MyUserManager()
 
@@ -50,7 +49,7 @@ class MyUser(AbstractBaseUser):
         return self.email
 
     def has_perm(self, perm, obj=None):
-        return self.is_superuser
+        return self.is_admin or self.is_superuser
 
     def has_module_perms(self, app_label):
-        return self.is_superuser
+        return self.is_admin or self.is_superuser

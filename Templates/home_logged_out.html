@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <section class="section-intro padding-y-sm">
+        <div class="container">
+            <div class="intro-banner-wrap">
+                <img src="{% static 'images/banners/banner1.webp' %}" class="img-fluid rounded">
+            </div>
+        </div> <!-- container // -->
+    </section>
+
+    <section class="section-name padding-y-sm">
+        <div class="container">
+            <header class="section-heading">
+                <a href="#" class="btn btn-outline-primary float-right">See all</a>
+                <h3 class="section-title">Popular products</h3>
+            </header><!-- sect-heading -->
+
+            <div class="row">
+                {% for item in products_with_images %}
+                    <div class="col-md-3">
+                        <div class="card card-product-grid">
+                            <a href="{% url 'storeapp:product_detail' category_slug=item.category_slug product_slug=item.product.slug %}" class="img-wrap">
+                            {% comment %} <a href="{% url 'storeapp:product_detail' slug=item.product.slug %}" class="img-wrap"> {% endcomment %}
+                                {% if item.images %}
+                                    <img src="{{ item.images.first.image.url }}" alt="{{ item.product.product_name }}">
+                                {% else %}
+                                    <img src="{% static 'images/default.jpeg' %}" alt="Default Image">
+                                {% endif %}
+                            </a>
+                            <figcaption class="info-wrap">
+                                <a href="{% url 'storeapp:product_detail' category_slug=item.category_slug product_slug=item.product.slug %}" >{{ item.product.product_name }} </a>
+                                
+                                <div class="price mt-1">₹ {{ item.product.price }}</div> <!-- price-wrap.// -->
+                            </figcaption>
+                        </div>
+                    </div> <!-- col.// -->
+                {% empty %}
+                    <div class="col-md-12">
+                        <p>No products available.</p>
+                    </div>
+                {% endfor %}
+            </div> <!-- row.// -->
+
+        </div><!-- container // -->
+    </section>
+{% endblock %}

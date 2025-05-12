@@ -1,0 +1,125 @@
+{% load static %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold">Edit Product</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="card p-5 shadow-sm">
+        {% csrf_token %}
+
+        <div class="table-responsive">
+            <table class="table table-borderless align-middle">
+                <tbody>
+                    <tr>
+                        <th class="text-end" style="width: 30%;"><label for="product_name" class="form-label"><strong>Product Name:</strong></label></th>
+                        <td><input type="text" id="product_name" name="product_name" class="form-control" value="{{ product.product_name }}" required></td>
+                    </tr>
+                    <tr>
+                        <th class="text-end"><label for="description" class="form-label"><strong>Description:</strong></label></th>
+                        <td><textarea id="description" name="description" class="form-control" rows="4" required>{{ product.description }}</textarea></td>
+                    </tr>
+                    <tr>
+                        <th class="text-end"><label for="price" class="form-label"><strong>Price:</strong></label></th>
+                        <td><input type="number" id="price" name="price" class="form-control" value="{{ product.price }}" step="0.01" required></td>
+                    </tr>
+                    <tr>
+                        <th class="text-end"><label for="stock" class="form-label"><strong>Stock:</strong></label></th>
+                        <td><input type="number" id="stock" name="stock" class="form-control" value="{{ product.stock }}" min="0" required></td>
+                    </tr>
+                    <tr>
+                        <th class="text-end"><label for="category" class="form-label"><strong>Category:</strong></label></th>
+                        <td>
+                            <select id="category" name="category_id" class="form-select">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == product.category.id %}selected{% endif %}>{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-end"><label for="images" class="form-label"><strong>Upload New Images:</strong></label></th>
+                        <td><input type="file" id="images" name="images" class="form-control" multiple></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mt-5 fw-bold">Current Images</h4>
+        <div class="row mt-4 mb-5">
+            {% for image in product_images %}
+                <div class="col-md-3 col-6 mb-4">
+                    <img src="{{ image.image.url }}" alt="Product Image" class="img-fluid rounded shadow-sm" style="height: 150px; object-fit: cover;">
+                </div>
+            {% empty %}
+                <p class="text-muted">No images uploaded yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5 py-2">Update Product</button>
+            <a href="{% url 'Adminapp:list_products' %}" class="btn btn-outline-secondary px-5 py-2 ms-3">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    /* Container and Card */
+    .container {
+        max-width: 800px;
+    }
+
+    .card {
+        border-radius: 12px;
+        background: #ffffff;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    /* Headings */
+    h2, h4 {
+        color: #2c3e50;
+    }
+
+    /* Form Inputs */
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 16px;
+        border: 1px solid #ced4da;
+        transition: 0.3s;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #5dade2;
+        box-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+    }
+
+    /* Buttons */
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #e9ecef;
+    }
+
+    /* Images */
+    .img-fluid {
+        border: 1px solid #dee2e6;
+        padding: 5px;
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
